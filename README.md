@@ -26,11 +26,9 @@ python main.py
 
 ## 📦 Requirements
 Install dependencies using :
-<pre>
 ```bash
 pip install -r requirements.txt
 ```
-</pre>
 
 ## 👩‍💻 Author
 
