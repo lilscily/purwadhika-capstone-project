@@ -1,6 +1,5 @@
 ## 📘 README.md
 
-```markdown
 # 🏷️ Warehouse Management System (WMS)
 
 This is a simple Warehouse Management System built with Python using the terminal and the `tabulate` library.
@@ -20,15 +19,19 @@ This is a simple Warehouse Management System built with Python using the termina
 - Delete material
 
 ## 🛠️ How to Run
-
+<pre>
 ```bash
 python main.py
+```
+</pre>
 
 ## 📦 Requirements
-
+Install dependencies using :
+<pre>
 ```bash
 pip install -r requirements.txt
 ```
+</pre>
 
 ## 👩‍💻 Author
 
