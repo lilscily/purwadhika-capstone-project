@@ -7,8 +7,8 @@ This is a simple Warehouse Management System built with Python using the termina
 ## 📋 Features
 
 - Show materials in warehouse:
-    -All materials
-    -Selected materials
+    - All materials
+    - Selected materials
 - Search materials by:
     - Material code
     - Material type
