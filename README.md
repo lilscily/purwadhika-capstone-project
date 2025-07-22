@@ -19,11 +19,11 @@ This is a simple Warehouse Management System built with Python using the termina
 - Delete material
 
 ## 🛠️ How to Run
-<pre>
+<p>
 ```bash
 python main.py
 ```
-</pre>
+</p>
 
 ## 📦 Requirements
 Install dependencies using :
