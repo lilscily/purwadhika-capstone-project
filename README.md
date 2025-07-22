@@ -1,4 +1,4 @@
-##**📘 README.md**
+## 📘 README.md
 
 ```markdown
 # 🏷️ Warehouse Management System (WMS)
@@ -32,4 +32,6 @@ pip install -r requirements.txt
 
 ## 👩‍💻 Author
 
-Capstone project module 1 at Purwadhika Digital Technology School.
+This project was created as part of my learning journey during the early stages of a Data Science and Machine Learning bootcamp at **Purwadhika Digital Technology School**.
+
+It demonstrates basic Python programming, data structures, and terminal-based UI interaction using the `tabulate` library.
