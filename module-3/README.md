@@ -1,146 +1,136 @@
-# 🧠 E-Commerce Customer Churn Prediction (Module 3)
+# 🧠 Customer Churn Prediction — Random Forest Model
 
-This project aims to identify customers who are likely to churn (stop using the platform) based on their behavior and engagement patterns.  
-By predicting churn early, businesses can take proactive measures to retain valuable customers through targeted marketing and improved service strategies.
+## 📋 Project Overview
+This project focuses on predicting **customer churn** using machine learning.  
+The objective is to identify customers who are likely to stop using the service, allowing the business to take proactive actions such as offering discounts, cashback, or loyalty programs to retain them.  
 
----
-
-## 📊 1. Project Overview
-
-Customer churn is a major challenge for e-commerce platforms, as acquiring new customers often costs more than retaining existing ones.  
-This project uses **machine learning models** to analyze customer data and predict churn probability, allowing for actionable insights that support customer retention efforts.
+Among the models tested, **Random Forest Classifier** delivered the most stable and interpretable results, balancing performance and business applicability.
 
 ---
 
-## 🧩 2. Dataset Summary
+## ⚙️ Model Used: Random Forest Classifier
 
-The dataset includes demographic and behavioral variables such as:
-
-| Feature | Description |
-|----------|-------------|
-| `Tenure` | Number of months a customer has been with the platform |
-| `WarehouseToHome` | Distance (in km) between customer home and warehouse |
-| `NumberOfDeviceRegistered` | Number of devices registered per customer |
-| `SatisfactionScore` | Customer satisfaction rating (1–5) |
-| `Complain` | Whether a customer has filed complaints |
-| `DaySinceLastOrder` | Days since the last order |
-| `CashbackAmount` | Cashback received by the customer |
-| `PreferedOrderCat` | Most frequently purchased product category |
-| `MaritalStatus` | Customer marital status |
-| `Churn` | Target variable (1 = Churned, 0 = Retained) |
+### **1. Model Explanation**
+Random Forest is an **ensemble learning algorithm** that constructs multiple decision trees and combines their outputs to improve prediction accuracy and reduce overfitting.  
+It performs well for both categorical and numerical data, providing high stability and interpretability through feature importance analysis.
 
 ---
 
-## ⚙️ 3. Data Preprocessing
+### **2. Best Parameters Used**
+```python
+RandomForestClassifier(
+    criterion='entropy',
+    max_depth=10,
+    max_features=None,
+    min_samples_leaf=1,
+    min_samples_split=2,
+    n_estimators=50,
+)
+```
 
-Steps performed:
-- **Missing value treatment** using median for numeric features.  
-- **Encoding categorical variables** (`PreferedOrderCat`, `MaritalStatus`) using **OneHotEncoder**.  
-- **Feature scaling** with **RobustScaler** for numeric columns (`Tenure`, `CashbackAmount`, `DaySinceLastOrder`).  
-- **Resampling** using **RandomUnderSampler** and **SMOTE** to handle class imbalance.  
-- **Train–test split** with `stratify=y` to preserve churn ratio.
-
----
-
-## 📈 4. Exploratory Data Analysis (EDA)
-
-Key findings:
-- **Tenure** and **CashbackAmount** have the strongest negative correlation with churn.  
-- **Complain** shows a strong positive correlation (+26%), indicating dissatisfied customers are more likely to churn.  
-- Customers with longer engagement and higher cashback tend to remain loyal.  
-- **Preferred categories** like *Mobile* and *Mobile Phone* show higher churn rates, likely due to infrequent purchases.  
-- **Married customers** form the majority user base (52.1%), suggesting potential for loyalty-focused offers.
+- **Criterion = 'entropy'** → Splits based on information gain.  
+- **Max depth = 10** → Prevents overfitting.  
+- **n_estimators = 50** → Ensures stability and efficiency.  
+- **max_features = None** → Considers all features at each split.  
+- **min_samples_split = 2, min_samples_leaf = 1** → Allows fine granularity in node formation.
 
 ---
 
-## 🤖 5. Model Development
+## 📊 Model Evaluation
 
-Several classification models were tested with different resampling techniques:
+### **Confusion Matrix**
 
-| Model | Resampler | Mean F2 (CV) | F2 (Test Set) |
-|--------|------------|--------------|----------------|
-| **XGBoostClassifier** | RandomUnderSampler | **0.805** | **0.763** |
-| RandomForestClassifier | RandomUnderSampler | 0.790 | 0.752 |
-| GradientBoostingClassifier | RandomUnderSampler | 0.746 | 0.717 |
-| DecisionTreeClassifier | RandomUnderSampler | 0.752 | 0.709 |
-
-✅ **Best Model:** XGBoost Classifier (RandomUnderSampler)
-
-The F2 score emphasizes recall, aligning with business needs to **capture more actual churners**, even if precision slightly decreases.
+| Actual / Predicted | Non-Churn (0) | Churn (1) |
+|--------------------|---------------|-----------|
+| **Non-Churn (0)**  | 518 (True Negative) | 136 (False Positive) |
+| **Churn (1)**      | 17 (False Negative) | 118 (True Positive) |
 
 ---
 
-## 💡 6. Feature Importance (XGBoost)
+### **Classification Report**
 
-| Rank | Feature | Importance |
-|------|----------|-------------|
-| 1 | `Tenure` | 0.2016 |
-| 2 | `Complain` | 0.1960 |
-| 3 | `PreferedOrderCat_Laptop & Accessory` | 0.0830 |
-| 4 | `CashbackAmount` | 0.0686 |
-| 5 | `DaySinceLastOrder` | 0.0631 |
-| 6 | `MaritalStatus_Single` | 0.0615 |
+| Metric | Class 0 (Non-Churn) | Class 1 (Churn) |
+|:-------|:-------------------:|:----------------:|
+| **Precision** | 0.9682 | 0.4646 |
+| **Recall** | 0.7920 | 0.8741 |
+| **F1-Score** | 0.8713 | 0.6067 |
+| **Accuracy** | **0.8061** | |
+| **F2-Score** | **0.7431** | *(recall-focused metric)* |
 
-Key takeaway:  
-**Customer tenure** and **complaint behavior** are the strongest indicators of churn. Customers who stay for shorter periods or lodge complaints are at higher risk of leaving.
-
----
-
-## 🧾 7. Model Evaluation
-
-| Metric | Train Set | Test Set |
-|---------|------------|-----------|
-| **F2 Score** | 0.871 | 0.738 |
-| **Recall** | 0.980 | 0.837 |
-| **Precision** | 0.630 | 0.500 |
-
-The model prioritizes recall to ensure more churners are captured — a desirable trait for customer retention-focused use cases.
+**Interpretation:**  
+- The model achieves **high recall (0.87)**, successfully identifying most customers at risk of churn.  
+- The **F2-Score (0.74)** emphasizes recall importance, making this model suitable for churn prevention where missing actual churners is costly.  
+- Accuracy (80.6%) and balanced performance indicate strong generalization.
 
 ---
 
-## 🔍 8. Confusion Matrix Insights
+## 🔑 Feature Importance (Top 10)
 
-| | Predicted No | Predicted Yes |
-|--|---------------|---------------|
-| **Actual No** | 490 | 164 |
-| **Actual Yes** | 28 | 107 |
-
-- The model correctly identified **107 churners** and **490 loyal customers**.  
-- **164 customers** were incorrectly flagged as churners (False Positives).  
-- **28 churners** were missed (False Negatives) — these are the highest priority for retention efforts.
-
----
-
-## 🚀 9. Actionable Insights
-
-- **Customer Retention:**  
-  Focus on identifying and re-engaging customers with short tenure or unresolved complaints through loyalty campaigns and proactive outreach.  
-
-- **Model Refinement:**  
-  Further optimize the XGBoost model through hyperparameter tuning or hybrid resampling (e.g., SMOTE + UnderSampler) to improve precision.  
-
-- **Business Strategy:**  
-  Analyze customers incorrectly flagged as churners to identify loyalty patterns, and address common issues among true churners such as complaint resolution or delayed delivery.  
+| Rank | Feature | Insight |
+|:--:|:--|:--|
+| 1 | RS__Tenure | Shorter customer relationships correlate with higher churn. |
+| 2 | RS__CashbackAmount | Low cashback values reduce customer loyalty. |
+| 3 | RS__DaySinceLastOrder | Longer inactivity indicates disengagement. |
+| 4 | RS__SatisfactionScore | Lower satisfaction scores are linked to churn. |
+| 5 | RS__Complain | Customers who complain are more likely to churn. |
+| 6 | RS__NumberOfDeviceRegistered | More devices registered = higher engagement. |
+| 7 | OHE__MaritalStatus_Single | Singles show different spending consistency. |
+| 8 | OHE__PreferedOrderCat_Laptop & Accessory | Certain product categories affect retention. |
+| 9 | OHE__MaritalStatus_Married | Marital status influences loyalty behavior. |
+| 10 | OHE__PreferedOrderCat_Mobile Phone | Product type affects engagement level. |
 
 ---
 
-## 🏁 10. Conclusion
+## 💰 Cost Analysis
 
-- The **XGBoost Classifier** emerged as the **best-performing model**, achieving an F2 score of **0.76** and strong recall performance.  
-- Tenure, complaint history, and cashback incentives are the most influential features affecting churn.  
-- The findings provide valuable direction for improving **customer retention, satisfaction, and engagement** in the e-commerce platform.
+### **Assumptions**
+- **Cost of acquiring a new customer:** $315  
+- **Cost of retaining a customer:** $63 (1/5 of acquisition cost)
+
+| Metric | Value |
+|:--------|:------:|
+| False Negatives (FN) | 17 |
+| False Positives (FP) | 136 |
+| True Positives (TP) | 118 |
+| True Negatives (TN) | 518 |
 
 ---
 
-## 🧰 Tools & Libraries
-- **Python 3.12**
-- **Pandas**, **NumPy**, **Matplotlib**, **Seaborn**
-- **Scikit-learn**, **Imbalanced-learn**
-- **XGBoost**
+### **Cost of False Negatives (FN)**
+Customers who churn but are not predicted to churn.  
+- **Cost = 17 × $315 = $5,355**
+
+### **Cost of False Positives (FP)**
+Customers who do not churn but are predicted to churn.  
+- **Cost = 136 × $63 = $8,568**
+
+### **Total Cost with the Model**
+- **Cost = $5,355 + $8,568 = $13,923**
+
+### **Total Cost without the Model**
+If no predictive model was used:  
+- **Cost = 135 × $315 = $42,525**
+
+### **Savings from the Model**
+| Scenario | Total Cost (USD) |
+|:----------|----------------:|
+| Without the model | $42,525 |
+| With the model | $13,923 |
+| **Savings** | **$28,602** |
 
 ---
 
-## 👩‍💻 Author
-**Lily Lily**  
-Data Science & Machine Learning Enthusiast  
-📧 *[Add your contact or LinkedIn link here]*  
+## 🧠 Business Interpretation
+- The Random Forest model **saves approximately $28,600** in churn-related costs.  
+- Although it spends slightly more on retention (due to false positives), this is far cheaper than reacquiring churned customers.  
+- By proactively targeting customers predicted to churn, the business can **increase retention, lower acquisition costs**, and maintain long-term profitability.  
+
+---
+
+## ✅ Conclusion
+The **Random Forest model** provides:
+- Strong **recall** (0.87) and **F2-score** (0.74).  
+- Clear **feature importance insights** to guide retention strategies.  
+- Measurable **financial savings** through reduced churn losses.  
+
+This model is recommended for deployment as a reliable churn prediction system and can serve as a foundation for future model improvements and automation.
